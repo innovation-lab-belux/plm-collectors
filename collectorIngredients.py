@@ -14,19 +14,26 @@ import json
 
 appended_data = []
 
-os.chdir('Recipes')
+os.chdir('../Batch2')
 FileList = glob.glob('*.xlsx')
 
 specs=[]
 iterances=[]
 
 r=0
+f=0
+nf=0
+w=0
+e=0
 for File in FileList:
     r+=1
     
     df = pd.read_excel(File)
     identifier = df['Specification'][0]
+    print(identifier)
+    
     recipe = '{ "id":"'+identifier+'","ingredients":['
+
 
     for i in range(len(df['Specification'])):
 
@@ -37,12 +44,15 @@ for File in FileList:
 
         ingredient=''
         try:
-            with open('data_'+spec+'.json', 'r') as file:
+            with open('./ingredients/data_'+spec+'.json', 'r') as file:
                 data = json.load(file)
                 ingredient = json.dumps(data)
                 ingredient = ingredient.replace("caillr@nyp6.onmicrosoft.com","no information")
+                f=+1
 
         except:
+            #print("")
+            nf=+1
             n=0
 
         if ingredient!='':
@@ -52,14 +62,25 @@ for File in FileList:
 
     recipe=recipe[:-1]
     recipe=recipe+"]}"
-    print(r)
+    #print(r)
 
-    y = json.loads(recipe)
-    with open('dataFinal_'+identifier+'.json', 'w') as f:
-        json.dump(y, f)
+    #print(recipe)
+    try:
+        y = json.loads(recipe)
+        #if(exists('dataFinal_'+identifier+'.json')):
 
-    print(r)
+        with open('dataFinal_'+identifier+'.json', 'w') as f:
+            json.dump(y, f)
         
+        w+=1   
+    except:
+        print("no ingredients found")
+
+    print(r)
+
+print(f)
+print(nf)  
+print(w)   
 
 '''
 print(Counter(iterances))
@@ -203,8 +224,8 @@ def extract_excel(spec):
     
     # caillr@nyp6.onmicrosoft.com 
 
-visit_initial_url()
-input()
+#visit_initial_url()
+#input()
 time.sleep(1)
 
 def move_to_coordinates(x,y,actions,driver):
@@ -215,15 +236,18 @@ def move_to_coordinates(x,y,actions,driver):
     return actions
 
 
-'''
+
 for i in range(len(specs)):
 
     spec = specs[i]
     url = "https://vlcspcomdoe.devsys.net.sap:44311/sap/bc/gui/sap/its/webgui?~transaction=*ZRM_ASS_SUBID_DISPL%20P_SUBID="+spec+";DYNP_OKCODE=SEARCH2#"
+    
     print(url)
     print(i)
+    print("")
 
-    if i>1640:
+
+    if i== -1:
         print("")
 
         time.sleep(0.5)
@@ -236,4 +260,3 @@ for i in range(len(specs)):
 
 
     # caillr@nyp6.onmicrosoft.com 
-'''

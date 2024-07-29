@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-df = pd.read_excel('Recipes-Orange.xlsx')
+df = pd.read_excel('Recipes.xlsx')
 driver = webdriver.Chrome()
 
 def visit_initial_url():
@@ -15,33 +15,58 @@ def visit_initial_url():
 
 def extract_excel(url):
     driver.get(url)
-    time.sleep(10)
+    time.sleep(5)
 
-    input_field = driver.find_element(By.ID,'tree#C115#4#1#1#i-text') 
-    actionsClick = ActionChains(driver)
+    #input_field = driver.find_element(By.ID,'tree#C115#4#1#1#i-text') 
+    
+    '''actionsClick = ActionChains(driver)
     actionsClick.move_to_element()
     actionsClick.double_click().perform()
     
     input_field.click().perform()
     time.sleep(0.1)
     input_field.click().perform()
-    time.sleep(10)
-
-    x_offset = -264
-    y_offset = -319
+    time.sleep(6)
+'''
+    x_offset = 399-756
+    y_offset = 319-400
     actions = ActionChains(driver)
     element = driver.find_element(By.TAG_NAME,'body') 
-    for i in range(10):
-        actions.move_to_element_with_offset(element, x_offset, y_offset)
-        actions.click().perform()
-        actions.send_keys(Keys.RETURN) 
-        time.sleep(1) 
+
+    actions.move_to_element_with_offset(element, x_offset, y_offset)
+    actions.click().perform()
+    time.sleep(0.5)
+    actions.send_keys(Keys.RETURN).perform()
+    time.sleep(1) 
+
+    x_offset = 411-756
+    y_offset = 287-400
+    actions = ActionChains(driver)
+    element = driver.find_element(By.TAG_NAME,'body') 
+
+    actions.move_to_element_with_offset(element, x_offset, y_offset)
+    actions.click().perform()
+    time.sleep(0.5)
+    actions.send_keys(Keys.RETURN).perform()
+    time.sleep(1)
+
 
 visit_initial_url()
 input()
-for url in df['url']:
-    print(url)
-    print("")
-    time.sleep(2)
-    
-    extract_excel(url)
+
+print(df.size)
+for i in range(len(df)):
+    if i>0:
+        url = df['url'][i]
+        print(url)
+        print(i)
+        print("")
+        time.sleep(2)
+        driver.execute_script("window.open('"+str(url)+"', '_blank')")
+        driver.switch_to.window(driver.window_handles[-1])
+        extract_excel(url)
+        time.sleep(0.5)
+        driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
+
+    #27
